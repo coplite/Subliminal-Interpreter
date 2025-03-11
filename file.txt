@@ -1,0 +1,18 @@
+make jizz 
+make squirt
+
+jizz = 4
+
+pow jizz 21 
+dec jizz
+
+squirt = 69
+
+mul squirt 12
+
+div jizz 9
+
+print jizz
+print squirt
+
+
