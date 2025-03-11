@@ -1,18 +1,18 @@
-make jizz 
+make fizz 
 make squirt
 
 jizz = 4
 
-pow jizz 21 
-dec jizz
+pow fizz 21 
+dec fizz
 
 squirt = 69
 
 mul squirt 12
 
-div jizz 9
+div fizz 9
 
-print jizz
+print fizz
 print squirt
 
 
