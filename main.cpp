@@ -1,11 +1,18 @@
+#include <cassert>
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <unordered_map>
 #include <variant>
 #include <vector>
-
+struct variable{
+    int value;
+    char name[24];
+};                                  // g++ test.cpp -pedantic -Wall -Werror && ./a.out
+std::vector<variable> storage;
+std::unordered_map<std::string, std::variant<void(*)(), void(*)(std::string), void(*)(std::string, int)>> Fns;
 std::vector<std::string> tokenize(std::string input, const char* delimiter){
     size_t pos = 0;
     std::vector<std::string> output;
@@ -16,13 +23,6 @@ std::vector<std::string> tokenize(std::string input, const char* delimiter){
     }
     return output;
 }
-struct variable{
-    int value;
-    char name[24];
-};
-std::vector<variable> storage;
-std::unordered_map<std::string, std::variant<void(*)(), void(*)(std::string), void(*)(std::string, int)>> Fns;
-
 void clear_(){
     system("clear");
 }
@@ -46,18 +46,25 @@ void help_(){
 7.  interpret(String)   - reads a file
 8.  exit                - exits the interface
 9.  list                - lists every variable
-10. dec                 - decrements variable
-11. pow                 - exponent variable
-12. modify              - modifies variable
-13. inc                 - increments variable
-14. add                 - add variable
-15. sub                 - subtract variable
-16. mul                 - multiply variable
-17. div                 - divide variable
-18. free                - delete variable
+10. dec(String)(int)    - decrements variable
+11. pow(String)(int)    - exponent variable
+12. modify(String)(int) - modifies variable
+13. inc(String)(int)    - increments variable
+14. add(String)(int)    - add variable
+15. sub(String)(int)    - subtract variable
+16. mul(String)(int)    - multiply variable
+17. div(String)(int)    - divide variable
+18. free(String)        - delete variable
+19. loop(String)(int)   - loops a file N times
 
 )";}
 void make_(std::string name){
+    for(variable& i : storage){
+        if(!strcmp(i.name, name.c_str())){
+            std::cout << "Variable already exists!" << std::endl;
+            return;
+        }
+    }
     variable var;
     if(name.size() > 24){
         std::cout << "Variable name too long!!" << std::endl;
@@ -177,7 +184,7 @@ void interpret_(std::string filename){
         total.emplace_back(temp);
     }
     for(unsigned long i = 0; i < total.size(); ++i){
-        if(total[i] == ""){
+        if(!total[i].size()){
             total.erase(total.begin() + i);
         }
     }
@@ -191,6 +198,9 @@ void interpret_(std::string filename){
         }
         thing.shrink_to_fit();
         int args = thing.size();
+        if(thing[0].find("//") != std::string::npos){
+            continue;
+        }
         if(args == 3 && thing[1] == "="){
             modify_(thing[0], std::stoi(thing[2]));
             continue;
@@ -232,6 +242,11 @@ void interpret_(std::string filename){
         }
     }
 }
+void loop_(std::string filename, int times){
+    for(int i = 0; i < times; ++i){
+        interpret_(filename);
+    }
+}
 int main(){    
     std::string input;
     Fns["clear"] = clear_;
@@ -252,6 +267,7 @@ int main(){
     Fns["div"] = div_;
     Fns["mul"] = mul_;
     Fns["free"] = free_;
+    Fns["loop"] = loop_;
     while(1){
         std::cout << ">>> ";
         std::getline(std::cin, input);
