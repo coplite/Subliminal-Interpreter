@@ -1,18 +1,21 @@
-make fizz 
-make squirt
+mul duck 3
 
-jizz = 4
+add gr 4
+pow gr 2
 
-pow fizz 21 
-dec fizz
+//make jizz 
+//make squirt
 
-squirt = 69
+//jizz = 4
 
-mul squirt 12
+//pow jizz 21 
+//dec jizz
 
-div fizz 9
+//squirt = 69
 
-print fizz
-print squirt
+//mul squirt 12
 
+//div jizz 9
 
+//print jizz
+//print squirt
